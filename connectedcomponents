@@ -1,0 +1,71 @@
+package com.afklm.bre.rule.governor.model;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import java.util.List;
+
+public class Graph {
+
+    public static void main(String[] args) {
+        Graph check = new Graph();
+        // Create graph using Adj list and populate data
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        check.populateGraph(1, 2, true, graph);
+        check.populateGraph(2, 3, true, graph);
+        check.populateGraph(1, 4, true, graph);
+        check.populateGraph(5, 6, true, graph);
+        check.populateGraph(7, 8, true, graph);
+        check.populateGraph(9, 10, true, graph);
+        check.populateGraph(10, 11, true, graph);
+        // DFS - to traverse Adj list and check fo previously inspected elements
+        System.out.println(graph);
+
+        Map<Integer, Boolean> visited = new HashMap<>();
+        check.dfs(graph, visited);
+        // Find number of connected components
+
+    }
+
+    private void dfs(Map<Integer, List<Integer>> graph, Map<Integer, Boolean> visited) {
+        int connectedComponents = 0;
+        for (Integer node : graph.keySet()) {
+            if (!visited.containsKey(node)) {
+                dfsHelper(node, graph, visited);
+                System.out.println();
+                connectedComponents++;
+            }
+        }
+        System.out.println(connectedComponents);
+    }
+
+    private void dfsHelper(Integer node, Map<Integer, List<Integer>> graph, Map<Integer, Boolean> visited) {
+        if (!visited.containsKey(node)) {
+            visited.put(node, true);
+            System.out.println(node);
+            for (Integer neighbor : graph.get(node)) {
+                dfsHelper(neighbor, graph, visited);
+            }
+        }
+    }
+
+    private void populateGraph(int origin, int destination, boolean undirected, Map<Integer, List<Integer>> graph) {
+        addElementToGraph(origin, destination, graph);
+        if (undirected) {
+            addElementToGraph(destination, origin, graph);
+        }
+    }
+
+    private void addElementToGraph(int origin, int destination, Map<Integer, List<Integer>> graph) {
+        if (graph.containsKey(origin)) {
+            List<Integer> neighbors = graph.get(origin);
+            neighbors.add(destination);
+            graph.put(origin, neighbors);
+        } else {
+            List<Integer> neighbors = new ArrayList<>();
+            neighbors.add(destination);
+            graph.put(origin, neighbors);
+        }
+    }
+}
