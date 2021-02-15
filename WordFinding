@@ -1,0 +1,125 @@
+package com.afklm.bre.rule.governor.model;
+
+public class WordFinding {
+
+    public static void main(String[] args) {
+        WordFinding puzzle = new WordFinding();
+        char[][] input = puzzle.getInput();
+        char[][] input1 = puzzle.getInput1();
+        char[][] input2 = puzzle.getInput2();
+
+        boolean isPatternAvailable = puzzle.findPattern(input, "ABCCED");
+        System.out.println(isPatternAvailable);
+
+        boolean isPatternAvailable1 = puzzle.findPattern(input1, "ABCCED");
+        System.out.println(isPatternAvailable1);
+
+        boolean isPatternAvailable2 = puzzle.findPattern(input2, "ABCCED");
+        System.out.println(isPatternAvailable2);
+    }
+
+    private boolean findPattern(char[][] input, String pattern) {
+        boolean result = false;
+        for (int i = 0; i < input.length; i++) {
+            for (int j = 0; j < input[0].length; j++) {
+                if (input[i][j] == pattern.charAt(0)) {
+                    if (!result) {
+                        result = dfs(input, pattern, i, j, 0);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean dfs(char[][] input, String pattern, int row, int column, int count) {
+
+        boolean result = false;
+        if (row < 0 || column < 0 || row >= input.length || column >= input[0].length || input[row][column] != pattern.charAt(count) || count > pattern.length() - 1) {
+            return result;
+        }
+        // Check count for the valid answer
+        if (count == pattern.length() - 1) {
+            result = true;
+        }
+
+
+        if (!result) {
+            input[row][column] = '$';
+
+            result = dfs(input, pattern, row, column + 1, count + 1);
+            if (!result) {
+                result = dfs(input, pattern, row + 1, column, count + 1);
+            }
+            if (!result) {
+                result = dfs(input, pattern, row, column - 1, count + 1);
+            }
+            if (!result) {
+                result = dfs(input, pattern, row - 1, column, count + 1);
+            }
+            input[row][column] = pattern.charAt(count);
+        }
+
+        return result;
+    }
+
+
+    public char[][] getInput() {
+
+        char[][] input = new char[3][4];
+        input[0][0] = 'A';
+        input[0][1] = 'B';
+        input[0][2] = 'C';
+        input[0][3] = 'E';
+        input[1][0] = 'S';
+        input[1][1] = 'F';
+        input[1][2] = 'C';
+        input[1][3] = 'S';
+        input[2][0] = 'A';
+        input[2][1] = 'D';
+        input[2][2] = 'E';
+        input[2][3] = 'E';
+
+        return input;
+    }
+
+    public char[][] getInput1() {
+
+        char[][] input = new char[3][4];
+        input[0][0] = 'A';
+        input[0][1] = 'A';
+        input[0][2] = 'A';
+        input[0][3] = 'A';
+        input[1][0] = 'A';
+        input[1][1] = 'A';
+        input[1][2] = 'A';
+        input[1][3] = 'S';
+        input[2][0] = 'A';
+        input[2][1] = 'A';
+        input[2][2] = 'A';
+        input[2][3] = 'A';
+
+        return input;
+    }
+
+    public char[][] getInput2() {
+
+        char[][] input = new char[3][4];
+        input[0][0] = 'A';
+        input[0][1] = 'B';
+        input[0][2] = 'C';
+        input[0][3] = 'E';
+        input[1][0] = 'D';
+        input[1][1] = 'E';
+        input[1][2] = 'C';
+        input[1][3] = 'S';
+        input[2][0] = 'D';
+        input[2][1] = 'A';
+        input[2][2] = 'E';
+        input[2][3] = 'E';
+
+        return input;
+    }
+
+
+}
