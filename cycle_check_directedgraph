@@ -1,0 +1,35 @@
+import java.util.*;
+
+class Program {
+
+  public boolean cycleInGraph(int[][] edges) {
+	 Map<Integer, Boolean> visited = new HashMap<>();
+	 for(int i = 0; i < edges.length; i++) {
+	    if(edges[i].length > 0) {
+					visited.put(i, true);
+					return dfs(edges, i, visited);
+			}
+		}
+    return false;
+  }
+	
+	private boolean dfs(int[][] graph, int edge, Map<Integer, Boolean> visited) {
+	
+		int[] neighbors =  graph[edge];
+		boolean isCyclePresent = false;
+		
+		for(int neighbor : neighbors) {
+			if(!isCyclePresent) {
+					if(visited.containsKey(neighbor)) {
+							return true;
+					}
+					else {
+							visited.put(neighbor, true);
+							isCyclePresent = dfs(graph, neighbor, visited);
+							visited.remove(neighbor);
+					}
+				}
+		}
+			return isCyclePresent;	
+	}
+}
