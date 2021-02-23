@@ -16,4 +16,7 @@ An island is surrounded by water and is formed by connecting adj lands horzontal
 
 Count the number of islads 
 
+<b>Manhattent distance</b>
+
+You have a n*n grid of binary value (0, 1) find the maximum distance of a '0' value to '1' 
 
