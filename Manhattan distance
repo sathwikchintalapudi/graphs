@@ -1,0 +1,96 @@
+package com.afklm.bre.rule.governor.model;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class ManhattanDistance {
+
+    int totalScannedElements;
+
+    public static void main(String[] args) {
+        ManhattanDistance manhattanDistance = new ManhattanDistance();
+        int[][] input = {{0}};
+        System.out.println(manhattanDistance.getManhattanDistance(input));
+    }
+
+    private int getManhattanDistance(int[][] input) {
+        int manhattanDistance = 0;
+        Queue<Pair> queue = new LinkedList<>();
+        totalScannedElements = input.length * input[0].length;
+
+        for (int i = 0; i < input.length; i++) {
+            for (int j = 0; j < input[0].length; j++) {
+                if (input[i][j] == 1) {
+                    queue.add(new Pair(i, j));
+                    input[i][j] = -1;
+                    totalScannedElements--;
+                }
+            }
+        }
+        //Exception scenarios when total graph contains all 0's and 1's
+        if (queue.isEmpty() || queue.size() == input.length * input[0].length) {
+            return 0;
+        }
+
+        queue.add(new Pair(-1, -1));
+
+        while (!queue.isEmpty()) {
+            Pair element = queue.poll();
+            if (element.columnId == -1) {
+                if (totalScannedElements > 0) {
+                    queue.add(new Pair(-1, -1));
+                }
+                manhattanDistance++;
+            } else {
+                updateNeighboursInQueue(input, element, queue);
+            }
+        }
+        return manhattanDistance;
+    }
+
+    private void updateNeighboursInQueue(int[][] graph, Pair input, Queue<Pair> queue) {
+        if (input.rowId + 1 < graph.length && graph[input.rowId + 1][input.columnId] != -1) {
+            queue.add(new Pair(input.rowId + 1, input.columnId));
+            graph[input.rowId + 1][input.columnId] = -1;
+            totalScannedElements--;
+        }
+
+        if (input.columnId + 1 < graph[0].length && graph[input.rowId][input.columnId + 1] != -1) {
+            queue.add(new Pair(input.rowId, input.columnId + 1));
+            graph[input.rowId][input.columnId + 1] = -1;
+            totalScannedElements--;
+        }
+
+        if (input.columnId - 1 >= 0 && graph[input.rowId][input.columnId - 1] != -1) {
+            queue.add(new Pair(input.rowId, input.columnId - 1));
+            graph[input.rowId][input.columnId - 1] = -1;
+            totalScannedElements--;
+        }
+
+        if (input.rowId - 1 >= graph[0].length && graph[input.rowId - 1][input.columnId] != -1) {
+            queue.add(new Pair(input.rowId - 1, input.columnId));
+            graph[input.rowId - 1][input.columnId] = -1;
+            totalScannedElements--;
+        }
+    }
+
+
+    private class Pair {
+        private Integer rowId;
+        private Integer columnId;
+
+
+        public Pair(Integer rowId, Integer columnId) {
+            this.rowId = rowId;
+            this.columnId = columnId;
+        }
+
+        public Integer getRowId() {
+            return rowId;
+        }
+
+        public Integer getColumnId() {
+            return columnId;
+        }
+    }
+}
