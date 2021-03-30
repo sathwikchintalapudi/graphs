@@ -1,0 +1,42 @@
+public class Check7 {
+
+    public static void main(String[] args) {
+        Check7 check7 = new Check7();
+        int[][] input = {
+            {1, 1, 0, 0, 0},
+            {0, 1, 0, 0, 1},
+            {1, 0, 0, 1, 1},
+            {0, 0, 0, 0, 0},
+            {1, 0, 1, 0, 1}
+        };
+        System.out.println(check7.getConnectedComponents(input));
+    }
+
+    private int getConnectedComponents(int[][] input) {
+
+        // Visited details
+        // get the first reachable 1
+        int isLands = 0;
+        for (int i = 0; i < input.length; i++) {
+            for (int j = 0; j < input[0].length; j++) {
+                if (input[i][j] == 1) {
+                    isLands++;
+                    dfs(input, i, j);
+                }
+            }
+        }
+        return isLands;
+    }
+
+    private void dfs(int[][] input, int i, int j) {
+        if (input[i][j] == 1) {
+            // movement of pointer
+            input[i][j] = -1;
+            int[] x_axis = new int[]{1, 1, 0, -1, -1, -1, 0, 1};
+            int[] y_axis = new int[]{0, -1, -1, -1, 0, 1, 1, 1};
+            for (int k = 0; k < x_axis.length; k++) {
+                dfs(input, i + x_axis[k], j + y_axis[k]);
+            }
+        }
+    }
+}
