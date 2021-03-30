@@ -24,12 +24,14 @@ public class Islands {
     }
 
     private void dfs(int[][] input, int i, int j) {
+        // Always check the input[i][j] in last or we may get index out of bound exception
         if (i < 0 || i > input.length - 1 || j < 0 || j > input[i].length - 1 || input[i][j] != 1) {
             return;
         }
 
         input[i][j] = -1;
 
+        // This only checks for 4 directions no diagonal verification 
         dfs(input, i, j + 1);
         dfs(input, i + 1, j);
         dfs(input, i, j - 1);
