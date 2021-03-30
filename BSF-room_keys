@@ -1,0 +1,45 @@
+package com.example.demo;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+public class Check6 {
+    public static void main(String[] args) {
+        Integer[][] input = {
+            {1},
+            {2},
+            {3},
+            {4},
+            {2}
+        };
+        Check6 check6 = new Check6();
+        System.out.println(check6.areAllRoomsVisited(input));
+    }
+
+    private boolean areAllRoomsVisited(Integer[][] input) {
+        List<Integer> visited = new ArrayList<>();
+        Queue<Integer> keys = new LinkedList<>();
+        for (int i = 0; i < input.length; i++) {
+            if (input[i].length > 0 && visited.size() < input.length) {
+                visited.add(i);
+                keys.addAll(Arrays.asList(input[i]));
+                bfs(input, visited, keys);
+            }
+        }
+        return (visited.size() == input.length);
+    }
+
+    private void bfs(Integer[][] input, List<Integer> visited, Queue<Integer> keys) {
+        while (!keys.isEmpty()) {
+            int currentKey = keys.poll();
+            if (!visited.contains(currentKey)) {
+                keys.addAll(Arrays.asList(input[currentKey]));
+                visited.add(currentKey);
+            }
+        }
+
+    }
+}
