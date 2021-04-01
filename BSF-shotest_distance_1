@@ -1,0 +1,95 @@
+package com.example.demo;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+public class Check9 {
+
+// * -> Valid route, O -> blocked route, S -> source, D -> destination 
+
+    public static void main(String[] args) {
+        Check9 check9 = new Check9();
+        String[][] input = new String[][]{
+            {"O", "*", "O", "S"},
+            {"*", "O", "*", "*"},
+            {"O", "*", "*", "*"},
+            {"D", "*", "*", "*"}
+        };
+        System.out.println(check9.getShotestPath(input));
+    }
+
+    private int getShotestPath(String[][] input) {
+        int result = 0;
+        for (int i = 0; i < input.length; i++) {
+            for (int j = 0; j < input[i].length; j++) {
+                if (input[i][j].equals("S")) {
+                    result = bfs(input, i, j);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private int bfs(String[][] input, int i, int j) {
+
+        List<Point> visited = new ArrayList<>();
+        Queue<Point> queue = new LinkedList<>();
+
+        queue.add(new Point(i, j));
+        visited.add(new Point(i, j));
+        queue.add(new Point(-1, -1));
+
+        int count = 1;
+        int[] x_axis = new int[]{1, 0, -1, 0};
+        int[] y_axis = new int[]{0, 1, 0, -1};
+
+        while (!queue.isEmpty()) {
+            Point current = queue.poll();
+            if (current.x == -1 && current.y == -1) {
+            
+                // If tall the roures are blocked and there is no way to reach the destination then we below case will be executed
+                if(queue.isEmpty()) {
+                    return -1;
+                }
+                queue.add(new Point(-1, -1));
+                count++;
+            }
+            else {
+                for (int diff = 0; diff < 4; diff++) {
+                    if (current.x + x_axis[diff] >= 0
+                        && current.y + y_axis[diff] >= 0
+                        && current.y + y_axis[diff] < input[0].length
+                        && current.x + x_axis[diff] < input.length
+                        && !input[current.x + x_axis[diff]][current.y + y_axis[diff]].equals("O")
+                        && !isVisited(visited, current.x + x_axis[diff], current.y + y_axis[diff])) {
+
+                        if (input[current.x + x_axis[diff]][current.y + y_axis[diff]].equals("D")) {
+                            return count;
+                        }
+                        visited.add(new Point(current.x + x_axis[diff], current.y + y_axis[diff]));
+                        queue.add(new Point(current.x + x_axis[diff], current.y + y_axis[diff]));
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    // Check if the point is already visited
+    private boolean isVisited(List<Point> visited, int x, int y) {
+        return visited.stream().anyMatch(v -> (v.x == x && v.y == y));
+    }
+
+    private class Point {
+        private Integer x;
+        private Integer y;
+
+        Point(Integer x, Integer y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+}
