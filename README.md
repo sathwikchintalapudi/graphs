@@ -20,3 +20,15 @@ Count the number of islads
 
 You have a n*n grid of binary value (0, 1) find the maximum distance of a '0' value to '1' 
 
+<b>Islands Steak</b>
+
+Given a M * N matrix (2D) for every cell (i, j) If there is a streak of 0's and 1's which surrounded by X on all sides,
+Then it can be captured
+
+{
+  {X, X, X, X}, 
+  {X, O, O, X}, 
+  {X, X, X, X}, 
+  {X, O, X, X}
+}
+
