@@ -1,0 +1,84 @@
+class Solution {
+    public void solve(char[][] board) { 
+        
+        int rows = board.length;
+        int columns = board[0].length;
+        
+        List<Point<Integer,Integer>> borders = new ArrayList<>();
+        
+        // Get the boundry cells
+        for(int row = 0; row < rows; row++) {
+            borders.add(new Point(row, 0));
+            borders.add(new Point(row, columns - 1));
+        }
+        
+        for(int column = 0; column < columns; column++) {
+             borders.add(new Point(0, column));
+             borders.add(new Point(rows-1, column));
+        }
+        
+        // DFS on the boundry cells to find O and its neighbours and convert them to E
+        for(Point<Integer, Integer> pair : borders) {
+            if(board[pair.x][pair.y] == 'O') {
+                bfs(pair.x, pair.y, board);
+            }
+        }
+             
+        // Finally iterate through the complete grid 
+        updateCompleteboard(board);
+      
+    }
+    
+    
+    private void bfs(int x, int y, char[][] board) {
+        Queue<Point<Integer,Integer>> queue = new LinkedList<>();
+        
+        queue.offer(new Point(x,y));
+        
+        int[] x_axis = new int[]{1, 0, -1, 0};
+        int[] y_axis = new int[]{0, 1, 0, -1};
+        
+        
+        while(!queue.isEmpty()) {
+            Point<Integer,Integer> currentPoint = queue.poll();
+            board[currentPoint.x][currentPoint.y] = 'E';
+            for(int k = 0; k < 4; k++) {
+                Point<Integer, Integer> newPoint = new Point(currentPoint.x + y_axis[k], currentPoint.y + x_axis[k]); 
+               if(isValid(newPoint, board)) {
+                  queue.add(newPoint);
+                  board[currentPoint.x + y_axis[k]][currentPoint.y + x_axis[k]] = 'E'; 
+               }
+           }
+        } 
+    }
+       
+    private boolean isValid(Point<Integer, Integer> point, char[][] board) {        
+        return point.x >= 0 && point.x < board.length && point.y >= 0 && point.y < board[0].length 
+            && (board[point.x][point.y] != 'E' && board[point.x][point.y] != 'X'); 
+    }
+      
+    private void updateCompleteboard(char[][] board) {
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
+                if(board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                 }
+                else if(board[i][j] == 'E') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+        
+    }
+    
+    
+    private class Point<U,V> {
+        U x;
+        V y;
+        
+        Point(U x, V y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+}
