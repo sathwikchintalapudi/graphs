@@ -1,0 +1,69 @@
+class Solution {
+    public void solve(char[][] board) { 
+        
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
+                if(board[i][j] == 'O') {
+                    bfs(board, i , j);
+                }
+            }
+        }
+    }
+       
+        // Identify Islands - Move in 4 directions and not in diagonal 
+        private void bfs(char[][] board, int i, int j) {
+            Queue<Point> queue = new LinkedList<>();
+            List<Point> visited = new ArrayList<>();
+            
+            Point p1 = new Point(i, j);
+            
+            queue.offer(p1);
+            visited.add(p1);
+            
+            // direction movement
+            int[] x_axis = new int[]{1, 0, -1, 0};
+            int[] y_axis = new int[]{0, 1, 0, -1};
+            
+            while(!queue.isEmpty()) {
+                Point p2 = queue.poll();
+                
+                for(int k = 0; k < 4; k++) {
+                    int x_updated = p2.x + y_axis[k];
+                    int y_updated = p2.y + x_axis[k];
+                    if(isValidPoint(x_updated, y_updated, visited, board)) {
+                        Point newPoint = new Point(x_updated, y_updated);
+                        visited.add(newPoint);
+                        queue.offer(newPoint);
+                    }
+                }
+         }       
+            
+          if(!isIslandSafe(visited, board)) {
+              for(Point islandPoint : visited) {
+                  board[islandPoint.x][islandPoint.y] = 'X';
+              }
+           }  
+      }
+        
+        private boolean isIslandSafe(List<Point> visited, char[][] board) {
+            return visited.stream().anyMatch(v -> (v.x == 0 || v.y == 0 || v.x == board.length - 1 || v.y == board[0].length - 1));
+        }
+        
+        
+        private boolean isValidPoint(int i, int j, List<Point> visited, char[][] board) {
+            return (i < board.length && i >= 0 && j < board[i].length && j >= 0) &&
+            (board[i][j] == 'O') && visited.stream().noneMatch(v -> (v.x == i && v.y == j));           
+        }        
+    
+    
+    
+    private class Point {
+        int x;
+        int y;
+        
+        Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+}
